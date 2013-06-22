@@ -219,3 +219,14 @@ assert.ok(result.value.expression instanceof NameExpression);
 assert.equal(result.value.name, 'bar');
 
 assert.equal(parser.parse('SimpleTerm'), null);
+
+// Parse name.name.name as simple term
+
+var parser = simpleparser.createParser('my.foo.bar', rules);
+var result = parser.parse('SimpleTerm');
+assert.ok(result);
+assert.ok(result.value instanceof DotExpression);
+assert.ok(result.value.expression instanceof DotExpression);
+assert.equal(result.value.name, 'bar');
+
+assert.equal(parser.parse('SimpleTerm'), null);
