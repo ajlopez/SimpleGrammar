@@ -24,6 +24,8 @@ var rules = [
     get(['(',')','[',']','.']).generate('Punctuation'),
     get('Integer').generate('SimpleTerm'),
     get('Name').generate('SimpleTerm'),
+    get('SimpleTerm', '.', 'Name').generate('SimpleTerm', function (values) { return new DotExpression(values[0].value, values[2].value.name); }),
+    get('SimpleTerm', '[', 'Expression', ']').generate('SimpleTerm'),
     get('SimpleTerm').generate('Term'),
     get('Term', 'Operator', 'Term').generate('Expression', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
     get('Term').generate('Expression')
@@ -70,6 +72,11 @@ function BinaryExpression(left, oper, right) {
     this.left = left;
     this.oper = oper;
     this.right = right;
+}
+
+function DotExpression(expr, name) {
+    this.expression = expr;
+    this.name = name;
 }
 
 // Parse simple string
@@ -202,3 +209,13 @@ assert.equal(result.value.oper, '+');
 
 assert.equal(parser.parse('Expression'), null);
 
+// Parse name.name as simple term
+
+var parser = simpleparser.createParser('foo.bar', rules);
+var result = parser.parse('SimpleTerm');
+assert.ok(result);
+assert.ok(result.value instanceof DotExpression);
+assert.ok(result.value.expression instanceof NameExpression);
+assert.equal(result.value.name, 'bar');
+
+assert.equal(parser.parse('SimpleTerm'), null);
