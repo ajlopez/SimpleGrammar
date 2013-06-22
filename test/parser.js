@@ -17,6 +17,7 @@ var rules = [
     get([' ','\t','\r','\n']).oneOrMore().skip(),
     get('#').upTo('\n').skip(),
     get('"').upTo('"').generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
+    get("'").upTo("'").generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
     get('0-9').oneOrMore().generate('Integer', function (value) { return createConstant(parseInt(value)); }),
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
     get(['+','-','*','/']).generate('Operator'),
@@ -60,6 +61,16 @@ function BinaryExpression(left, oper, right) {
 // Parse simple string
 
 var parser = simpleparser.createParser('"foo"', rules);
+var result = parser.parse('String');
+assert.ok(result);
+assert.ok(result.value instanceof ConstantExpression);
+assert.equal(result.value.value, 'foo');
+
+assert.equal(parser.parse('String'), null);
+
+// Parse simple string in single quotes
+
+var parser = simpleparser.createParser("'foo'", rules);
 var result = parser.parse('String');
 assert.ok(result);
 assert.ok(result.value instanceof ConstantExpression);
