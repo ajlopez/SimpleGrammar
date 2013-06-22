@@ -30,3 +30,19 @@ assert.equal(parser.parse('a'), null);
 assert.equal(parser.parse('aa'), null);
 assert.equal(parser.parse('ba'), null);
 assert.equal(parser.parse('bb'), null);
+
+// parse character range
+
+var parser = parse('a-z');
+
+assert.ok(parser.parse('a'));
+assert.equal(parser.parse('a'), 'a');
+assert.ok(parser.parse('b'));
+assert.equal(parser.parse('b'), 'b');
+assert.ok(parser.parse('z'));
+assert.equal(parser.parse('z'), 'z');
+
+assert.equal(parser.parse('A'), null);
+assert.equal(parser.parse('Z'), null);
+
+
