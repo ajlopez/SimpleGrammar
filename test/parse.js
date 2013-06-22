@@ -18,3 +18,15 @@ assert.ok(parser.parse('a'));
 assert.equal(parser.parse('a'), 'a');
 assert.equal(parser.parse('b'), null);
 
+// parse two characters
+
+var parser = parse('a').and('b');
+
+var result = parser.parse('ab');
+assert.ok(result);
+assert.equal(result, 'ab');
+
+assert.equal(parser.parse('a'), null);
+assert.equal(parser.parse('aa'), null);
+assert.equal(parser.parse('ba'), null);
+assert.equal(parser.parse('bb'), null);
