@@ -108,4 +108,16 @@ assert.equal(rule.process('Z'), 'Z');
 assert.equal(rule.process('0'), null);
 assert.equal(rule.process('9'), null);
 
+// parse word
+
+var rule = get(['a-z', 'A-Z']).oneOrMore();
+
+assert.ok(rule.process('abc'));
+assert.equal(rule.process('abc'), 'abc');
+assert.ok(rule.process('Abc'));
+assert.equal(rule.process('Abc'), 'Abc');
+
+assert.equal(rule.process('0'), null);
+assert.equal(rule.process('9'), null);
+
 
