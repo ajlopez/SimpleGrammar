@@ -120,4 +120,20 @@ assert.equal(rule.process('Abc'), 'Abc');
 assert.equal(rule.process('0'), null);
 assert.equal(rule.process('9'), null);
 
+// parse word with underscore and digits
+
+var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
+
+assert.ok(rule.process('abc'));
+assert.equal(rule.process('abc'), 'abc');
+assert.ok(rule.process('Abc'));
+assert.equal(rule.process('Abc'), 'Abc');
+
+assert.equal(rule.process('_123'), '_123');
+assert.equal(rule.process('a123'), 'a123');
+assert.equal(rule.process('a_name'), 'a_name');
+
+assert.equal(rule.process('0'), null);
+assert.equal(rule.process('9'), null);
+assert.equal(rule.process('123'), null);
 
