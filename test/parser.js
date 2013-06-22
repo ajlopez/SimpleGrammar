@@ -14,7 +14,7 @@ assert.equal(typeof simpleparser.createParser, "function");
 // rules to use
 
 var rules = [
-    get(' ').oneOrMore().skip(),
+    get([' ','\t','\r','\n']).oneOrMore().skip(),
     get('0-9').oneOrMore().generate('Integer', function (value) { return createConstant(parseInt(value)); }),
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
     get(['+','-','*','/']).generate('Operator'),
@@ -68,6 +68,16 @@ assert.equal(parser.parse('Integer'), null);
 // Parse integer with spaces
 
 var parser = simpleparser.createParser('  123   ', rules);
+var result = parser.parse('Integer');
+assert.ok(result);
+assert.ok(result.value instanceof ConstantExpression);
+assert.equal(result.value.value, 123);
+
+assert.equal(parser.parse('Integer'), null);
+
+// Parse integer with spaces, tabs, carriage returns, and new lines
+
+var parser = simpleparser.createParser('  \t\r123\n\r\t   ', rules);
 var result = parser.parse('Integer');
 assert.ok(result);
 assert.ok(result.value instanceof ConstantExpression);
