@@ -88,4 +88,24 @@ assert.equal(parser.parse('z'), 'z');
 assert.equal(parser.parse('A'), null);
 assert.equal(parser.parse('Z'), null);
 
+// parse letter
+
+var parser = parse(['a-z', 'A-Z']);
+
+assert.ok(parser.parse('a'));
+assert.equal(parser.parse('a'), 'a');
+assert.ok(parser.parse('b'));
+assert.equal(parser.parse('b'), 'b');
+assert.ok(parser.parse('z'));
+assert.equal(parser.parse('z'), 'z');
+assert.ok(parser.parse('A'));
+assert.equal(parser.parse('A'), 'A');
+assert.ok(parser.parse('B'));
+assert.equal(parser.parse('B'), 'B');
+assert.ok(parser.parse('Z'));
+assert.equal(parser.parse('Z'), 'Z');
+
+assert.equal(parser.parse('0'), null);
+assert.equal(parser.parse('9'), null);
+
 
