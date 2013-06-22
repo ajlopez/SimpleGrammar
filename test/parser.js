@@ -16,7 +16,7 @@ assert.equal(typeof simpleparser.createParser, "function");
 var rules = [
     get([' ','\t','\r','\n']).oneOrMore().skip(),
     get('#').upTo('\n').skip(),
-    get('"').upTo('"').generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
+    get('"').upTo('"', '\\', escape).generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
     get("'").upTo("'", '\\', escape).generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
     get('0-9').oneOrMore().generate('Integer', function (value) { return createConstant(parseInt(value)); }),
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
@@ -88,6 +88,26 @@ var result = parser.parse('String');
 assert.ok(result);
 assert.ok(result.value instanceof ConstantExpression);
 assert.equal(result.value.value, 'foo');
+
+assert.equal(parser.parse('String'), null);
+
+// Parse simple string in single quotes with escape single quote
+
+var parser = simpleparser.createParser("'foo\\\'bar'", rules);
+var result = parser.parse('String');
+assert.ok(result);
+assert.ok(result.value instanceof ConstantExpression);
+assert.equal(result.value.value, 'foo\'bar');
+
+assert.equal(parser.parse('String'), null);
+
+// Parse simple string in double quotes with escape single quote
+
+var parser = simpleparser.createParser('"foo\\"bar"', rules);
+var result = parser.parse('String');
+assert.ok(result);
+assert.ok(result.value instanceof ConstantExpression);
+assert.equal(result.value.value, 'foo"bar');
 
 assert.equal(parser.parse('String'), null);
 
