@@ -30,3 +30,10 @@ var parser = simpleparser.createParser('123', rules);
 var result = parser.parse('Integer');
 assert.ok(result);
 assert.equal(result.value, '123');
+
+// Parse integer as term
+
+var parser = simpleparser.createParser('123', rules);
+var result = parser.parse('Term');
+assert.ok(result);
+assert.equal(result.value, '123');
