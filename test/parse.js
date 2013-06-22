@@ -59,6 +59,21 @@ assert.equal(result, 'b');
 assert.equal(parser.parse('c'), null);
 assert.equal(parser.parse('d'), null);
 
+// parse two characters as alternatives using array argument
+
+var parser = parse(['a', 'b']);
+
+var result = parser.parse('a');
+assert.ok(result);
+assert.equal(result, 'a');
+
+var result = parser.parse('b');
+assert.ok(result);
+assert.equal(result, 'b');
+
+assert.equal(parser.parse('c'), null);
+assert.equal(parser.parse('d'), null);
+
 // parse character range
 
 var parser = parse('a-z');
