@@ -20,15 +20,19 @@ var rules = [
     get("'").upTo("'", '\\', escape).generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
     get('0-9').oneOrMore().generate('Integer', function (value) { return createConstant(parseInt(value)); }),
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
-    get(['+','-','*','/']).generate('Operator'),
+    get(['+','-']).generate('Operator1'),
+    get(['*','/']).generate('Operator1'),
     get(['(',')','[',']','.']).generate('Punctuation'),
     get('Integer').generate('SimpleTerm'),
     get('Name').generate('SimpleTerm'),
     get('SimpleTerm', '.', 'Name').generate('SimpleTerm', function (values) { return new DotExpression(values[0].value, values[2].value.name); }),
     get('SimpleTerm', '[', 'Expression', ']').generate('SimpleTerm'),
     get('SimpleTerm').generate('Term'),
-    get('Term', 'Operator', 'Term').generate('Expression', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
-    get('Term').generate('Expression')
+    get('Term').generate('Expression0'),
+    get('Expression0', 'Operator0', 'Term').generate('Expression0', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
+    get('Expression0').generate('Expression1'),
+    get('Expression1', 'Operator1', 'Expression0').generate('Expression1', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
+    get('Expression1').generate('Expression')
 ];
 
 // escape character function
