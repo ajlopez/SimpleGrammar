@@ -137,3 +137,12 @@ assert.equal(rule.process('0'), null);
 assert.equal(rule.process('9'), null);
 assert.equal(rule.process('123'), null);
 
+// parse word as object
+
+var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
+
+var result = rule.process('abc');
+assert.ok(result);
+assert.equal(typeof result, 'object');
+assert.equal(result.type, 'Word');
+assert.equal(result.value, 'abc');
