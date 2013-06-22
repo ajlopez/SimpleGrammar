@@ -22,8 +22,9 @@ var rules = [
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
     get(['+','-','*','/']).generate('Operator'),
     get(['(',')','[',']','.']).generate('Punctuation'),
-    get('Integer').generate('Term'),
-    get('Name').generate('Term'),
+    get('Integer').generate('SimpleTerm'),
+    get('Name').generate('SimpleTerm'),
+    get('SimpleTerm').generate('Term'),
     get('Term', 'Operator', 'Term').generate('Expression', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
     get('Term').generate('Expression')
 ];
@@ -180,6 +181,18 @@ assert.equal(result.value.value, 123);
 // Parse integer + name as expression
 
 var parser = simpleparser.createParser('123+name', rules);
+var result = parser.parse('Expression');
+assert.ok(result);
+assert.ok(result.value instanceof BinaryExpression);
+assert.ok(result.value.left instanceof ConstantExpression);
+assert.ok(result.value.right instanceof NameExpression);
+assert.equal(result.value.oper, '+');
+
+assert.equal(parser.parse('Expression'), null);
+
+// Parse integer + name as expression with spaces, tabs, new lines
+
+var parser = simpleparser.createParser('  123  \n  +  \rname', rules);
 var result = parser.parse('Expression');
 assert.ok(result);
 assert.ok(result.value instanceof BinaryExpression);
