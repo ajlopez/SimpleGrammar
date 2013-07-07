@@ -1,7 +1,7 @@
 
 var simpleparser = require('..'),
     assert = require('assert');
-    
+
 // get function
 
 var get = simpleparser.get;
@@ -20,7 +20,7 @@ var rules = [
     get("'").upTo("'", '\\', escape).generate('String', function (value) { return createConstant(value.substring(1, value.length - 1)); }),
     get('0-9').oneOrMore().generate('Integer', function (value) { return createConstant(parseInt(value)); }),
     get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Name', function (name) { return createName(name); }),
-    get(['+','-']).generate('Operator1'),
+    get(['+','-']).generate('Operator0'),
     get(['*','/']).generate('Operator1'),
     get(['(',')','[',']','.']).generate('Punctuation'),
     get('Integer').generate('SimpleTerm'),

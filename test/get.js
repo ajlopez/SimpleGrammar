@@ -1,7 +1,7 @@
 
 var simpleparser = require('..'),
     assert = require('assert');
-    
+
 // get function
 
 assert.ok(simpleparser);
@@ -146,3 +146,11 @@ assert.ok(result);
 assert.equal(typeof result, 'object');
 assert.equal(result.type, 'Word');
 assert.equal(result.value, 'abc');
+
+// parse string word
+
+var rule = get("for");
+
+var result = rule.process('for');
+assert.ok(result);
+assert.equal(result, 'for');
