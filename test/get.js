@@ -153,3 +153,12 @@ exports['parse string word'] = function (test) {
     test.ok(result);
     test.equal(result, 'for');
 }
+
+exports['parse partial word'] = function (test) {
+    var rule = get("for");
+    var parser = simpleparser.createParser("fot");
+
+    var result = rule.process(parser);
+    test.equal(result, null);
+    test.equal(parser.next(), "f");
+}
