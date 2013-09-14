@@ -1,15 +1,14 @@
 
-var simpleparser = require('..'),
-    assert = require('assert');
+var simpleparser = require('..');
 
 // get function
 
 var get = simpleparser.get;
 
-// createParser function
-
-assert.ok(simpleparser.createParser);
-assert.equal(typeof simpleparser.createParser, "function");
+exports['createParser function'] = function (test) {
+    test.ok(simpleparser.createParser);
+    test.equal(typeof simpleparser.createParser, "function");
+}
 
 // rules to use
 
@@ -83,154 +82,155 @@ function DotExpression(expr, name) {
     this.name = name;
 }
 
-// Parse simple string
+exports['Parse simple string'] = function (test) {
+    var parser = simpleparser.createParser('"foo"', rules);
+    var result = parser.parse('String');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 'foo');
 
-var parser = simpleparser.createParser('"foo"', rules);
-var result = parser.parse('String');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 'foo');
+    test.equal(parser.parse('String'), null);
+}
 
-assert.equal(parser.parse('String'), null);
+exports['Parse simple string in single quotes'] = function (test) {
+    var parser = simpleparser.createParser("'foo'", rules);
+    var result = parser.parse('String');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 'foo');
 
-// Parse simple string in single quotes
+    test.equal(parser.parse('String'), null);
+}
 
-var parser = simpleparser.createParser("'foo'", rules);
-var result = parser.parse('String');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 'foo');
+exports['Parse simple string in single quotes with escape single quote'] = function (test) {
+    var parser = simpleparser.createParser("'foo\\\'bar'", rules);
+    var result = parser.parse('String');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 'foo\'bar');
 
-assert.equal(parser.parse('String'), null);
+    test.equal(parser.parse('String'), null);
+}
 
-// Parse simple string in single quotes with escape single quote
+exports['Parse simple string in double quotes with escape single quote'] = function (test) {
+    var parser = simpleparser.createParser('"foo\\"bar"', rules);
+    var result = parser.parse('String');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 'foo"bar');
 
-var parser = simpleparser.createParser("'foo\\\'bar'", rules);
-var result = parser.parse('String');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 'foo\'bar');
+    test.equal(parser.parse('String'), null);
+}
 
-assert.equal(parser.parse('String'), null);
+exports['Parse simple string with special characters'] = function (test) {
+    var parser = simpleparser.createParser("'foo\\t\\n\\rbar'", rules);
+    var result = parser.parse('String');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 'foo\t\n\rbar');
 
-// Parse simple string in double quotes with escape single quote
+    test.equal(parser.parse('String'), null);
+}
 
-var parser = simpleparser.createParser('"foo\\"bar"', rules);
-var result = parser.parse('String');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 'foo"bar');
+exports['Parse integer'] = function (test) {
+    var parser = simpleparser.createParser('123', rules);
+    var result = parser.parse('Integer');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
 
-assert.equal(parser.parse('String'), null);
+    test.equal(parser.parse('Integer'), null);
+}
 
-// Parse simple string with special characters
+exports['Parse integer with spaces'] = function (test) {
+    var parser = simpleparser.createParser('  123   ', rules);
+    var result = parser.parse('Integer');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
 
-var parser = simpleparser.createParser("'foo\\t\\n\\rbar'", rules);
-var result = parser.parse('String');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 'foo\t\n\rbar');
+    test.equal(parser.parse('Integer'), null);
+}
 
-assert.equal(parser.parse('String'), null);
+exports['Parse integer with spaces, tabs, carriage returns, and new lines'] = function (test) {
+    var parser = simpleparser.createParser('  \t\r123\n\r\t   ', rules);
+    var result = parser.parse('Integer');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
 
-// Parse integer
+    test.equal(parser.parse('Integer'), null);
+}
 
-var parser = simpleparser.createParser('123', rules);
-var result = parser.parse('Integer');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
+exports['Parse integer line comments'] = function (test) {
+    var parser = simpleparser.createParser('  # a comment\r\n123  # another comment\r\n', rules);
+    var result = parser.parse('Integer');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
 
-assert.equal(parser.parse('Integer'), null);
+    test.equal(parser.parse('Integer'), null);
+}
 
-// Parse integer with spaces
+exports['Parse integer as term'] = function (test) {
+    var parser = simpleparser.createParser('123', rules);
+    var result = parser.parse('Term');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
+}
 
-var parser = simpleparser.createParser('  123   ', rules);
-var result = parser.parse('Integer');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
+exports['Parse integer as expression'] = function (test) {
+    var parser = simpleparser.createParser('123', rules);
+    var result = parser.parse('Expression');
+    test.ok(result);
+    test.ok(result.value instanceof ConstantExpression);
+    test.equal(result.value.value, 123);
+}
 
-assert.equal(parser.parse('Integer'), null);
+exports['Parse integer + name as expression'] = function (test) {
+    var parser = simpleparser.createParser('123+name', rules);
+    var result = parser.parse('Expression');
+    test.ok(result);
+    test.ok(result.value instanceof BinaryExpression);
+    test.ok(result.value.left instanceof ConstantExpression);
+    test.ok(result.value.right instanceof NameExpression);
+    test.equal(result.value.oper, '+');
 
-// Parse integer with spaces, tabs, carriage returns, and new lines
+    test.equal(parser.parse('Expression'), null);
+}
 
-var parser = simpleparser.createParser('  \t\r123\n\r\t   ', rules);
-var result = parser.parse('Integer');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
+exports['Parse integer + name as expression with spaces, tabs, new lines'] = function (test) {
+    var parser = simpleparser.createParser('  123  \n  +  \rname', rules);
+    var result = parser.parse('Expression');
+    test.ok(result);
+    test.ok(result.value instanceof BinaryExpression);
+    test.ok(result.value.left instanceof ConstantExpression);
+    test.ok(result.value.right instanceof NameExpression);
+    test.equal(result.value.oper, '+');
 
-assert.equal(parser.parse('Integer'), null);
+    test.equal(parser.parse('Expression'), null);
+}
 
-// Parse integer line comments
+exports['Parse name.name as simple term'] = function (test) {
+    var parser = simpleparser.createParser('foo.bar', rules);
+    var result = parser.parse('SimpleTerm');
+    test.ok(result);
+    test.ok(result.value instanceof DotExpression);
+    test.ok(result.value.expression instanceof NameExpression);
+    test.equal(result.value.name, 'bar');
 
-var parser = simpleparser.createParser('  # a comment\r\n123  # another comment\r\n', rules);
-var result = parser.parse('Integer');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
+    test.equal(parser.parse('SimpleTerm'), null);
+}
 
-assert.equal(parser.parse('Integer'), null);
+exports['Parse name.name.name as simple term'] = function (test) {
+    var parser = simpleparser.createParser('my.foo.bar', rules);
+    var result = parser.parse('SimpleTerm');
+    test.ok(result);
+    test.ok(result.value instanceof DotExpression);
+    test.ok(result.value.expression instanceof DotExpression);
+    test.equal(result.value.name, 'bar');
 
-// Parse integer as term
+    test.equal(parser.parse('SimpleTerm'), null);
+}
 
-var parser = simpleparser.createParser('123', rules);
-var result = parser.parse('Term');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
-
-// Parse integer as expression
-
-var parser = simpleparser.createParser('123', rules);
-var result = parser.parse('Expression');
-assert.ok(result);
-assert.ok(result.value instanceof ConstantExpression);
-assert.equal(result.value.value, 123);
-
-// Parse integer + name as expression
-
-var parser = simpleparser.createParser('123+name', rules);
-var result = parser.parse('Expression');
-assert.ok(result);
-assert.ok(result.value instanceof BinaryExpression);
-assert.ok(result.value.left instanceof ConstantExpression);
-assert.ok(result.value.right instanceof NameExpression);
-assert.equal(result.value.oper, '+');
-
-assert.equal(parser.parse('Expression'), null);
-
-// Parse integer + name as expression with spaces, tabs, new lines
-
-var parser = simpleparser.createParser('  123  \n  +  \rname', rules);
-var result = parser.parse('Expression');
-assert.ok(result);
-assert.ok(result.value instanceof BinaryExpression);
-assert.ok(result.value.left instanceof ConstantExpression);
-assert.ok(result.value.right instanceof NameExpression);
-assert.equal(result.value.oper, '+');
-
-assert.equal(parser.parse('Expression'), null);
-
-// Parse name.name as simple term
-
-var parser = simpleparser.createParser('foo.bar', rules);
-var result = parser.parse('SimpleTerm');
-assert.ok(result);
-assert.ok(result.value instanceof DotExpression);
-assert.ok(result.value.expression instanceof NameExpression);
-assert.equal(result.value.name, 'bar');
-
-assert.equal(parser.parse('SimpleTerm'), null);
-
-// Parse name.name.name as simple term
-
-var parser = simpleparser.createParser('my.foo.bar', rules);
-var result = parser.parse('SimpleTerm');
-assert.ok(result);
-assert.ok(result.value instanceof DotExpression);
-assert.ok(result.value.expression instanceof DotExpression);
-assert.equal(result.value.name, 'bar');
-
-assert.equal(parser.parse('SimpleTerm'), null);

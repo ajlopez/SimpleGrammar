@@ -1,156 +1,155 @@
 
-var simpleparser = require('..'),
-    assert = require('assert');
-
-// get function
-
-assert.ok(simpleparser);
-assert.ok(simpleparser.get);
-assert.equal(typeof simpleparser.get, "function");
+var simpleparser = require('..');
 
 var get = simpleparser.get;
 
-// parse a character
+exports['get function'] = function (test) {
+    test.ok(simpleparser);
+    test.ok(simpleparser.get);
+    test.equal(typeof simpleparser.get, "function");
+}
 
-var rule = get('a');
+exports['parse a character'] = function (test) {
+    var rule = get('a');
 
-assert.ok(rule.process('a'));
-assert.equal(rule.process('a'), 'a');
-assert.equal(rule.process('b'), null);
+    test.ok(rule.process('a'));
+    test.equal(rule.process('a'), 'a');
+    test.equal(rule.process('b'), null);
+}
 
-// parse two characters
+exports['parse two characters'] = function (test) {
+    var rule = get('a').and('b');
 
-var rule = get('a').and('b');
+    var result = rule.process('ab');
+    test.ok(result);
+    test.equal(result, 'ab');
 
-var result = rule.process('ab');
-assert.ok(result);
-assert.equal(result, 'ab');
+    test.equal(rule.process('a'), null);
+    test.equal(rule.process('aa'), null);
+    test.equal(rule.process('ba'), null);
+    test.equal(rule.process('bb'), null);
+}
 
-assert.equal(rule.process('a'), null);
-assert.equal(rule.process('aa'), null);
-assert.equal(rule.process('ba'), null);
-assert.equal(rule.process('bb'), null);
+exports['parse two characters as arguments'] = function (test) {
+    var rule = get('a', 'b');
 
-// parse two characters as arguments
+    var result = rule.process('ab');
+    test.ok(result);
+    test.equal(result, 'ab');
 
-var rule = get('a', 'b');
+    test.equal(rule.process('a'), null);
+    test.equal(rule.process('aa'), null);
+    test.equal(rule.process('ba'), null);
+    test.equal(rule.process('bb'), null);
+}
 
-var result = rule.process('ab');
-assert.ok(result);
-assert.equal(result, 'ab');
+exports['parse two characters as alternatives'] = function (test) {
+    var rule = get('a').or('b');
 
-assert.equal(rule.process('a'), null);
-assert.equal(rule.process('aa'), null);
-assert.equal(rule.process('ba'), null);
-assert.equal(rule.process('bb'), null);
+    var result = rule.process('a');
+    test.ok(result);
+    test.equal(result, 'a');
 
-// parse two characters as alternatives
+    var result = rule.process('b');
+    test.ok(result);
+    test.equal(result, 'b');
 
-var rule = get('a').or('b');
+    test.equal(rule.process('c'), null);
+    test.equal(rule.process('d'), null);
+}
 
-var result = rule.process('a');
-assert.ok(result);
-assert.equal(result, 'a');
+exports['parse two characters as alternatives using array argument'] = function (test) {
+    var rule = get(['a', 'b']);
 
-var result = rule.process('b');
-assert.ok(result);
-assert.equal(result, 'b');
+    var result = rule.process('a');
+    test.ok(result);
+    test.equal(result, 'a');
 
-assert.equal(rule.process('c'), null);
-assert.equal(rule.process('d'), null);
+    var result = rule.process('b');
+    test.ok(result);
+    test.equal(result, 'b');
 
-// parse two characters as alternatives using array argument
+    test.equal(rule.process('c'), null);
+    test.equal(rule.process('d'), null);
+}
 
-var rule = get(['a', 'b']);
+exports['parse character range'] = function (test) {
+    var rule = get('a-z');
 
-var result = rule.process('a');
-assert.ok(result);
-assert.equal(result, 'a');
+    test.ok(rule.process('a'));
+    test.equal(rule.process('a'), 'a');
+    test.ok(rule.process('b'));
+    test.equal(rule.process('b'), 'b');
+    test.ok(rule.process('z'));
+    test.equal(rule.process('z'), 'z');
 
-var result = rule.process('b');
-assert.ok(result);
-assert.equal(result, 'b');
+    test.equal(rule.process('A'), null);
+    test.equal(rule.process('Z'), null);
+}
 
-assert.equal(rule.process('c'), null);
-assert.equal(rule.process('d'), null);
+exports['parse letter'] = function (test) {
+    var rule = get(['a-z', 'A-Z']);
 
-// parse character range
+    test.ok(rule.process('a'));
+    test.equal(rule.process('a'), 'a');
+    test.ok(rule.process('b'));
+    test.equal(rule.process('b'), 'b');
+    test.ok(rule.process('z'));
+    test.equal(rule.process('z'), 'z');
+    test.ok(rule.process('A'));
+    test.equal(rule.process('A'), 'A');
+    test.ok(rule.process('B'));
+    test.equal(rule.process('B'), 'B');
+    test.ok(rule.process('Z'));
+    test.equal(rule.process('Z'), 'Z');
 
-var rule = get('a-z');
+    test.equal(rule.process('0'), null);
+    test.equal(rule.process('9'), null);
+}
 
-assert.ok(rule.process('a'));
-assert.equal(rule.process('a'), 'a');
-assert.ok(rule.process('b'));
-assert.equal(rule.process('b'), 'b');
-assert.ok(rule.process('z'));
-assert.equal(rule.process('z'), 'z');
+exports['parse word'] = function (test) {
+    var rule = get(['a-z', 'A-Z']).oneOrMore();
 
-assert.equal(rule.process('A'), null);
-assert.equal(rule.process('Z'), null);
+    test.ok(rule.process('abc'));
+    test.equal(rule.process('abc'), 'abc');
+    test.ok(rule.process('Abc'));
+    test.equal(rule.process('Abc'), 'Abc');
 
-// parse letter
+    test.equal(rule.process('0'), null);
+    test.equal(rule.process('9'), null);
+}
 
-var rule = get(['a-z', 'A-Z']);
+exports['parse word with underscore and digits'] = function (test) {
+    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
 
-assert.ok(rule.process('a'));
-assert.equal(rule.process('a'), 'a');
-assert.ok(rule.process('b'));
-assert.equal(rule.process('b'), 'b');
-assert.ok(rule.process('z'));
-assert.equal(rule.process('z'), 'z');
-assert.ok(rule.process('A'));
-assert.equal(rule.process('A'), 'A');
-assert.ok(rule.process('B'));
-assert.equal(rule.process('B'), 'B');
-assert.ok(rule.process('Z'));
-assert.equal(rule.process('Z'), 'Z');
+    test.ok(rule.process('abc'));
+    test.equal(rule.process('abc'), 'abc');
+    test.ok(rule.process('Abc'));
+    test.equal(rule.process('Abc'), 'Abc');
 
-assert.equal(rule.process('0'), null);
-assert.equal(rule.process('9'), null);
+    test.equal(rule.process('_123'), '_123');
+    test.equal(rule.process('a123'), 'a123');
+    test.equal(rule.process('a_name'), 'a_name');
 
-// parse word
+    test.equal(rule.process('0'), null);
+    test.equal(rule.process('9'), null);
+    test.equal(rule.process('123'), null);
+}
 
-var rule = get(['a-z', 'A-Z']).oneOrMore();
+exports['parse word as object'] = function (test) {
+    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
 
-assert.ok(rule.process('abc'));
-assert.equal(rule.process('abc'), 'abc');
-assert.ok(rule.process('Abc'));
-assert.equal(rule.process('Abc'), 'Abc');
+    var result = rule.process('abc');
+    test.ok(result);
+    test.equal(typeof result, 'object');
+    test.equal(result.type, 'Word');
+    test.equal(result.value, 'abc');
+}
 
-assert.equal(rule.process('0'), null);
-assert.equal(rule.process('9'), null);
+exports['parse string word'] = function (test) {
+    var rule = get("for");
 
-// parse word with underscore and digits
-
-var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
-
-assert.ok(rule.process('abc'));
-assert.equal(rule.process('abc'), 'abc');
-assert.ok(rule.process('Abc'));
-assert.equal(rule.process('Abc'), 'Abc');
-
-assert.equal(rule.process('_123'), '_123');
-assert.equal(rule.process('a123'), 'a123');
-assert.equal(rule.process('a_name'), 'a_name');
-
-assert.equal(rule.process('0'), null);
-assert.equal(rule.process('9'), null);
-assert.equal(rule.process('123'), null);
-
-// parse word as object
-
-var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
-
-var result = rule.process('abc');
-assert.ok(result);
-assert.equal(typeof result, 'object');
-assert.equal(result.type, 'Word');
-assert.equal(result.value, 'abc');
-
-// parse string word
-
-var rule = get("for");
-
-var result = rule.process('for');
-assert.ok(result);
-assert.equal(result, 'for');
+    var result = rule.process('for');
+    test.ok(result);
+    test.equal(result, 'for');
+}
