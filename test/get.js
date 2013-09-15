@@ -188,3 +188,14 @@ exports['parse nothing'] = function (test) {
     test.equal(result, '');
     test.equal(parser.next(), "f");
 }
+
+exports['parse nothing as something'] = function (test) {
+    var rule = get("").generate('Something');
+    var parser = simplegrammar.createParser("for");
+
+    var result = rule.process(parser);
+    test.ok(result);
+    test.equal(result.type, 'Something');
+    test.equal(result.value, '');
+    test.equal(parser.next(), "f");
+}
