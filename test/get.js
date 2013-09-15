@@ -179,3 +179,12 @@ exports['parse partial word'] = function (test) {
     test.equal(result, null);
     test.equal(parser.next(), "f");
 }
+
+exports['parse nothing'] = function (test) {
+    var rule = get("");
+    var parser = simplegrammar.createParser("for");
+
+    var result = rule.process(parser);
+    test.equal(result, '');
+    test.equal(parser.next(), "f");
+}
