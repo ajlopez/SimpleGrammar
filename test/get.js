@@ -1,12 +1,12 @@
 
-var simpleparser = require('..');
+var simplegrammar = require('..');
 
-var get = simpleparser.get;
+var get = simplegrammar.get;
 
 exports['get function'] = function (test) {
-    test.ok(simpleparser);
-    test.ok(simpleparser.get);
-    test.equal(typeof simpleparser.get, "function");
+    test.ok(simplegrammar);
+    test.ok(simplegrammar.get);
+    test.equal(typeof simplegrammar.get, "function");
 }
 
 exports['parse a character'] = function (test) {
@@ -164,7 +164,7 @@ exports['parse sign word'] = function (test) {
 
 exports['reject parse sign word'] = function (test) {
     var rule = get("==");
-    var parser = simpleparser.createParser('for');
+    var parser = simplegrammar.createParser('for');
 
     var result = rule.process(parser);
     test.equal(result, null);
@@ -173,7 +173,7 @@ exports['reject parse sign word'] = function (test) {
 
 exports['parse partial word'] = function (test) {
     var rule = get("for");
-    var parser = simpleparser.createParser("fot");
+    var parser = simplegrammar.createParser("fot");
 
     var result = rule.process(parser);
     test.equal(result, null);

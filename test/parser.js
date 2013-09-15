@@ -1,13 +1,13 @@
 
-var simpleparser = require('..');
+var simplegrammar = require('..');
 
 // get function
 
-var get = simpleparser.get;
+var get = simplegrammar.get;
 
 exports['createParser function'] = function (test) {
-    test.ok(simpleparser.createParser);
-    test.equal(typeof simpleparser.createParser, "function");
+    test.ok(simplegrammar.createParser);
+    test.equal(typeof simplegrammar.createParser, "function");
 }
 
 // rules to use
@@ -83,7 +83,7 @@ function DotExpression(expr, name) {
 }
 
 exports['Parse simple string'] = function (test) {
-    var parser = simpleparser.createParser('"foo"', rules);
+    var parser = simplegrammar.createParser('"foo"', rules);
     var result = parser.parse('String');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -93,7 +93,7 @@ exports['Parse simple string'] = function (test) {
 }
 
 exports['Parse simple string in single quotes'] = function (test) {
-    var parser = simpleparser.createParser("'foo'", rules);
+    var parser = simplegrammar.createParser("'foo'", rules);
     var result = parser.parse('String');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -103,7 +103,7 @@ exports['Parse simple string in single quotes'] = function (test) {
 }
 
 exports['Parse simple string in single quotes with escape single quote'] = function (test) {
-    var parser = simpleparser.createParser("'foo\\\'bar'", rules);
+    var parser = simplegrammar.createParser("'foo\\\'bar'", rules);
     var result = parser.parse('String');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -113,7 +113,7 @@ exports['Parse simple string in single quotes with escape single quote'] = funct
 }
 
 exports['Parse simple string in double quotes with escape single quote'] = function (test) {
-    var parser = simpleparser.createParser('"foo\\"bar"', rules);
+    var parser = simplegrammar.createParser('"foo\\"bar"', rules);
     var result = parser.parse('String');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -123,7 +123,7 @@ exports['Parse simple string in double quotes with escape single quote'] = funct
 }
 
 exports['Parse simple string with special characters'] = function (test) {
-    var parser = simpleparser.createParser("'foo\\t\\n\\rbar'", rules);
+    var parser = simplegrammar.createParser("'foo\\t\\n\\rbar'", rules);
     var result = parser.parse('String');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -133,7 +133,7 @@ exports['Parse simple string with special characters'] = function (test) {
 }
 
 exports['Parse integer'] = function (test) {
-    var parser = simpleparser.createParser('123', rules);
+    var parser = simplegrammar.createParser('123', rules);
     var result = parser.parse('Integer');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -143,7 +143,7 @@ exports['Parse integer'] = function (test) {
 }
 
 exports['Parse integer with spaces'] = function (test) {
-    var parser = simpleparser.createParser('  123   ', rules);
+    var parser = simplegrammar.createParser('  123   ', rules);
     var result = parser.parse('Integer');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -153,7 +153,7 @@ exports['Parse integer with spaces'] = function (test) {
 }
 
 exports['Parse integer with spaces, tabs, carriage returns, and new lines'] = function (test) {
-    var parser = simpleparser.createParser('  \t\r123\n\r\t   ', rules);
+    var parser = simplegrammar.createParser('  \t\r123\n\r\t   ', rules);
     var result = parser.parse('Integer');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -163,7 +163,7 @@ exports['Parse integer with spaces, tabs, carriage returns, and new lines'] = fu
 }
 
 exports['Parse integer line comments'] = function (test) {
-    var parser = simpleparser.createParser('  # a comment\r\n123  # another comment\r\n', rules);
+    var parser = simplegrammar.createParser('  # a comment\r\n123  # another comment\r\n', rules);
     var result = parser.parse('Integer');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -173,7 +173,7 @@ exports['Parse integer line comments'] = function (test) {
 }
 
 exports['Parse integer as term'] = function (test) {
-    var parser = simpleparser.createParser('123', rules);
+    var parser = simplegrammar.createParser('123', rules);
     var result = parser.parse('Term');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -181,7 +181,7 @@ exports['Parse integer as term'] = function (test) {
 }
 
 exports['Parse integer as expression'] = function (test) {
-    var parser = simpleparser.createParser('123', rules);
+    var parser = simplegrammar.createParser('123', rules);
     var result = parser.parse('Expression');
     test.ok(result);
     test.ok(result.value instanceof ConstantExpression);
@@ -189,7 +189,7 @@ exports['Parse integer as expression'] = function (test) {
 }
 
 exports['Parse integer + name as expression'] = function (test) {
-    var parser = simpleparser.createParser('123+name', rules);
+    var parser = simplegrammar.createParser('123+name', rules);
     var result = parser.parse('Expression');
     test.ok(result);
     test.ok(result.value instanceof BinaryExpression);
@@ -201,7 +201,7 @@ exports['Parse integer + name as expression'] = function (test) {
 }
 
 exports['Parse integer + name as expression with spaces, tabs, new lines'] = function (test) {
-    var parser = simpleparser.createParser('  123  \n  +  \rname', rules);
+    var parser = simplegrammar.createParser('  123  \n  +  \rname', rules);
     var result = parser.parse('Expression');
     test.ok(result);
     test.ok(result.value instanceof BinaryExpression);
@@ -213,7 +213,7 @@ exports['Parse integer + name as expression with spaces, tabs, new lines'] = fun
 }
 
 exports['Parse name.name as simple term'] = function (test) {
-    var parser = simpleparser.createParser('foo.bar', rules);
+    var parser = simplegrammar.createParser('foo.bar', rules);
     var result = parser.parse('SimpleTerm');
     test.ok(result);
     test.ok(result.value instanceof DotExpression);
@@ -224,7 +224,7 @@ exports['Parse name.name as simple term'] = function (test) {
 }
 
 exports['Parse name.name.name as simple term'] = function (test) {
-    var parser = simpleparser.createParser('my.foo.bar', rules);
+    var parser = simplegrammar.createParser('my.foo.bar', rules);
     var result = parser.parse('SimpleTerm');
     test.ok(result);
     test.ok(result.value instanceof DotExpression);
