@@ -154,6 +154,23 @@ exports['parse string word'] = function (test) {
     test.equal(result, 'for');
 }
 
+exports['parse sign word'] = function (test) {
+    var rule = get("==");
+
+    var result = rule.process('==');
+    test.ok(result);
+    test.equal(result, '==');
+}
+
+exports['reject parse sign word'] = function (test) {
+    var rule = get("==");
+    var parser = simpleparser.createParser('for');
+
+    var result = rule.process(parser);
+    test.equal(result, null);
+    test.equal(parser.next(), 'f');
+}
+
 exports['parse partial word'] = function (test) {
     var rule = get("for");
     var parser = simpleparser.createParser("fot");
