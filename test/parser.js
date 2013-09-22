@@ -24,13 +24,13 @@ var rules = [
     get(['(',')','[',']','.']).generate('Punctuation'),
     get('Integer').generate('SimpleTerm'),
     get('Name').generate('SimpleTerm'),
-    get('SimpleTerm', '.', 'Name').generate('SimpleTerm', function (values) { return new DotExpression(values[0].value, values[2].value.name); }),
+    get('SimpleTerm', '.', 'Name').generate('SimpleTerm', function (values) { return new DotExpression(values[0], values[2].name); }),
     get('SimpleTerm', '[', 'Expression', ']').generate('SimpleTerm'),
     get('SimpleTerm').generate('Term'),
     get('Term').generate('Expression0'),
-    get('Expression0', 'Operator0', 'Term').generate('Expression0', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
+    get('Expression0', 'Operator0', 'Term').generate('Expression0', function (values) { return createBinaryExpression(values[0], values[1], values[2]); }),
     get('Expression0').generate('Expression1'),
-    get('Expression1', 'Operator1', 'Expression0').generate('Expression1', function (values) { return createBinaryExpression(values[0].value, values[1].value, values[2].value); }),
+    get('Expression1', 'Operator1', 'Expression0').generate('Expression1', function (values) { return createBinaryExpression(values[0], values[1], values[2]); }),
     get('Expression1').generate('Expression')
 ];
 
