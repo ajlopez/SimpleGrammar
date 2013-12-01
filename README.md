@@ -17,6 +17,7 @@ Reference in your program:
 ```js
 var sg = require('simplegrammar');
 var get = sg.get;
+var peek = sg.peek;
 ```
 
 There are rules, that process string input:
@@ -41,10 +42,18 @@ var noresult = get('for').process('if'); // noresult is null
 
 But in general, the rules are invoked by a parser.
 ```js
-var parser = sg.createParser([rulefor, ruledigit, ... ]);
+var parser = sg.createParser(text, [rulefor, ruledigit, ... ]);
 ```
 
 A parser has an array of rule to execute.
+
+There are `peek` rules to get an element, but without removing it from the parser process:
+
+var rule = peek('for');
+var rule2 = get('for');
+var parser = sg.createParser('for'); // without rules, invoke the rule directly
+rule.process(parser); // success, it detects 'for'
+rule2.process(parser); // success again, it detects and remove 'for'
 
 TBD: explain other rules (generate, oneOrMore, zeroOrMore, ...) and more examples
 
@@ -61,10 +70,17 @@ npm test
 
 TBD
 
+## Projects
+
+Projects that use SimpleGrammar:
+
+TBD
+
 ## Versions
 
 - 0.0.1: Published
 - 0.0.2: Published. Refactor TransformRule to process an array
+- 0.0.3: Published. Peek element (like get but without removing the element from the parser)
 
 ## License
 
