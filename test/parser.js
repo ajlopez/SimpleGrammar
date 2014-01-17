@@ -234,3 +234,26 @@ exports['Parse name.name.name as simple term'] = function (test) {
     test.equal(parser.parse('SimpleTerm'), null);
 }
 
+exports['Push and retrieve items'] = function (test) {
+    var parser = simplegrammar.createParser('', []);
+    
+    parser.push(['if', { name: 'Expression', value: 1 }, 'else', { name: 'Expression', value: 2 }]);
+    
+    var result = parser.next();
+    test.ok(result);
+    test.equal(result, 'if');
+    
+    result = parser.next();
+    test.ok(result);
+    test.equal(result.name, 'Expression');
+    test.equal(result.value, 1);
+    
+    result = parser.next();
+    test.ok(result);
+    test.equal(result, 'else');
+    
+    result = parser.next();
+    test.ok(result);
+    test.equal(result.name, 'Expression');
+    test.equal(result.value, 2);
+}

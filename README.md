@@ -81,6 +81,7 @@ TBD
 - 0.0.1: Published
 - 0.0.2: Published. Refactor TransformRule to process an array
 - 0.0.3: Published. Peek element (like get but without removing the element from the parser)
+- 0.0.4: Published. Fixing push array bug in parser
 
 ## License
 
