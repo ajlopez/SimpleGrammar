@@ -199,3 +199,14 @@ exports['parse nothing as something'] = function (test) {
     test.equal(result.value, '');
     test.equal(parser.next(), "f");
 }
+
+exports['parse delimited string'] = function (test) {
+    var rule = get('"', '~"').generate('String', function (values) { return values.substring(1) });
+    var parser = simplegrammar.createParser('"foo"');
+
+    var result = rule.process(parser);
+    test.ok(result);
+    test.equal(result.type, 'String');
+    test.equal(result.value, 'foo');
+    test.equal(parser.next(), null);
+}
