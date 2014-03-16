@@ -201,7 +201,7 @@ exports['parse nothing as something'] = function (test) {
 }
 
 exports['parse delimited string'] = function (test) {
-    var rule = get('"', '~"').generate('String', function (values) { return values.substring(1) });
+    var rule = get('"~"').generate('String');
     var parser = simplegrammar.createParser('"foo"');
 
     var result = rule.process(parser);
