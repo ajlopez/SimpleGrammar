@@ -242,3 +242,15 @@ exports['parse delimited string'] = function (test) {
     test.equal(result.value, 'foo');
     test.equal(parser.next(), null);
 }
+
+exports['parse two words skipping spaces'] = function (test) {
+    var rule1 = get([' ','\t','\r','\n']).oneOrMore().skip();
+    var rule2 = get('if', 'then').generate('Expression');
+    var parser = simplegrammar.createParser('if then', [rule1, rule2]);
+    
+    var result = parser.parse('Expression');
+    
+    test.ok(result);
+    test.equal(result.type, 'Expression');
+    test.equal(result.value, 'ifthen');
+}
