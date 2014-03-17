@@ -136,6 +136,38 @@ exports['parse word with underscore and digits'] = function (test) {
     test.equal(rule.process('123'), null);
 }
 
+exports['parse word with underscore and digits and optional ending bang'] = function (test) {
+    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore(), get('!').zeroOrOne());
+
+    test.ok(rule.process('abc'));
+    test.equal(rule.process('abc'), 'abc');
+    test.ok(rule.process('Abc'));
+    test.equal(rule.process('Abc'), 'Abc');
+
+    test.ok(rule.process('abc!'));
+    test.equal(rule.process('abc!'), 'abc!');
+    test.ok(rule.process('Abc!'));
+    test.equal(rule.process('Abc!'), 'Abc!');
+
+    test.equal(rule.process('_123'), '_123');
+    test.equal(rule.process('a123'), 'a123');
+    test.equal(rule.process('a_name'), 'a_name');
+
+    test.equal(rule.process('_123!'), '_123!');
+    test.equal(rule.process('a123!'), 'a123!');
+    test.equal(rule.process('a_name!'), 'a_name!');
+
+    test.equal(rule.process('_123!!'), '_123!');
+    test.equal(rule.process('a123!!'), 'a123!');
+    test.equal(rule.process('a_name!!'), 'a_name!');
+
+    test.equal(rule.process('0'), null);
+    test.equal(rule.process('9'), null);
+    test.equal(rule.process('123'), null);
+
+    test.equal(rule.process('!'), null);
+};
+
 exports['parse word as object'] = function (test) {
     var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
 
