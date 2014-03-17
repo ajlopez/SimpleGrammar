@@ -1,7 +1,7 @@
 { "name": "simplegrammar"
 , "description": "SimpleGrammar define parsers"
 , "keywords": [ "grammar", "javascript", "parser" ]
-, "version": "0.0.6"
+, "version": "0.0.7"
 , "author": "Angel 'Java' Lopez <webmaster@ajlopez.com> (http://www.ajlopez.com)"
 , "repository": { "type": "git", "url": "git://github.com/ajlopez/SimpleGrammar.git" }
 , "main": "./lib/simplegrammar.js"
