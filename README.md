@@ -55,7 +55,7 @@ var parser = sg.createParser('for'); // without rules, invoke the rule directly
 rule.process(parser); // success, it detects 'for'
 rule2.process(parser); // success again, it detects and remove 'for'
 
-TBD: explain other rules (generate, oneOrMore, zeroOrMore, ...) and more examples
+TBD: explain other rules (generate, oneOrMore, zeroOrMore, zeroOrOne, ...) and more examples
 
 ## Development
 
@@ -83,6 +83,7 @@ TBD
 - 0.0.3: Published. Peek element (like get but without removing the element from the parser)
 - 0.0.4: Published. Fixing push array bug in parser
 - 0.0.5: Published. Delimited by character rule
+- 0.0.6: Published. zeroOrOne rule
 
 ## License
 
