@@ -22,8 +22,14 @@ var rules = [
     get(['+','-']).generate('Operator0'),
     get(['*','/']).generate('Operator1'),
     get(['(',')','[',']','.']).generate('Punctuation'),
+    get('==').generate('Equal'),
+    get('=').generate('Assign'),
+    get('Equal').generate('Operator'),
+    get('Assign').generate('Operator'),
     get('Integer').generate('SimpleTerm'),
     get('Name').generate('SimpleTerm'),
+    get('Name', 'Assign', 'Expression0').generate('Assignment'),
+    get('Expression0', 'Equal', 'Expression0').generate('Expression'),
     get('SimpleTerm', '.', 'Name').generate('SimpleTerm', function (values) { return new DotExpression(values[0], values[2].name); }),
     get('SimpleTerm', '[', 'Expression', ']').generate('SimpleTerm'),
     get('SimpleTerm').generate('Term'),
@@ -188,6 +194,54 @@ exports['Parse integer as expression'] = function (test) {
     test.equal(result.value.value, 123);
 }
 
+exports['Parse equals as Equal'] = function (test) {
+    var parser = simplegrammar.createParser('==', rules);
+    var result = parser.parse('Equal');
+    test.ok(result);
+    test.ok(typeof result.value == 'string');
+    test.equal(result.value, '==');
+}
+
+exports['Parse assign as Assign'] = function (test) {
+    var parser = simplegrammar.createParser('=', rules);
+    var result = parser.parse('Assign');
+    test.ok(result);
+    test.ok(typeof result.value == 'string');
+    test.equal(result.value, '=');
+}
+
+exports['Parse assignment'] = function (test) {
+    var parser = simplegrammar.createParser('a=1', rules);
+    var result = parser.parse('Assignment');
+    test.ok(result);
+    test.equal(parser.parse('Expression'), null);
+    test.equal(parser.next(), null);
+}
+
+exports['Parse equals'] = function (test) {
+    var parser = simplegrammar.createParser('a==1', rules);
+    var result = parser.parse('Expression');
+    test.ok(result);
+    test.equal(parser.parse('Expression'), null);
+    test.equal(parser.next(), null);
+}
+
+exports['Parse equals as operator'] = function (test) {
+    var parser = simplegrammar.createParser('==', rules);
+    var result = parser.parse('Operator');
+    test.ok(result);
+    test.ok(typeof result.value == 'string');
+    test.equal(result.value, '==');
+}
+
+exports['Parse assign as operator'] = function (test) {
+    var parser = simplegrammar.createParser('=', rules);
+    var result = parser.parse('Operator');
+    test.ok(result);
+    test.ok(typeof result.value == 'string');
+    test.equal(result.value, '=');
+}
+
 exports['Parse integer + name as expression'] = function (test) {
     var parser = simplegrammar.createParser('123+name', rules);
     var result = parser.parse('Expression');
@@ -257,3 +311,4 @@ exports['Push and retrieve items'] = function (test) {
     test.equal(result.name, 'Expression');
     test.equal(result.value, 2);
 }
+
