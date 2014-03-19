@@ -1,11 +1,11 @@
 { "name": "simplegrammar"
 , "description": "SimpleGrammar define parsers"
 , "keywords": [ "grammar", "javascript", "parser" ]
-, "version": "0.0.7"
+, "version": "0.0.8"
 , "author": "Angel 'Java' Lopez <webmaster@ajlopez.com> (http://www.ajlopez.com)"
 , "repository": { "type": "git", "url": "git://github.com/ajlopez/SimpleGrammar.git" }
 , "main": "./lib/simplegrammar.js"
-, "engines": { "node": ">= 0.6.0 && < 0.11.0" }
+, "engines": { "node": ">= 0.6.0 && < 0.13.0" }
 , "scripts": {
     "test": "simpleunit test"
   }

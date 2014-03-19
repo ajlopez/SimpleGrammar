@@ -85,6 +85,7 @@ TBD
 - 0.0.5: Published. Delimited by character rule
 - 0.0.6: Published. zeroOrOne rule
 - 0.0.7: Published. skip in ElementRule, fix parser push
+- 0.0.8: Published. Internal push refactor, to parse = and ==
 
 ## License
 
