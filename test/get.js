@@ -17,6 +17,25 @@ exports['parse a character'] = function (test) {
     test.equal(rule.process('b'), null);
 }
 
+exports['parse a character with log function'] = function (test) {
+    var result;
+    var rule = get('a').log(function (data, rule) { result = data; test.ok(data); test.ok(rule); });
+
+    test.ok(rule.process('a'));
+    test.equal(rule.process('a'), 'a');
+    
+    test.ok(result);
+    test.equal(result, 'a');
+}
+
+exports['parse a character with fail function'] = function (test) {
+    var failed = false;
+    var rule = get('a').fail(function (source, rule) { test.ok(source); test.equal(source, 'b'); failed = true; });
+
+    test.equal(rule.process('b'), null);
+    test.ok(failed);
+}
+
 exports['parse two characters'] = function (test) {
     var rule = get('a').and('b');
 
