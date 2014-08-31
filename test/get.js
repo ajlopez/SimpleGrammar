@@ -11,6 +11,8 @@ exports['get function'] = function (test) {
 
 exports['parse a character'] = function (test) {
     var rule = get('a');
+    
+    test.equal(rule.getDescription(), 'a');
 
     test.ok(rule.process('a'));
     test.equal(rule.process('a'), 'a');
@@ -38,6 +40,8 @@ exports['parse a character with fail function'] = function (test) {
 
 exports['parse two characters'] = function (test) {
     var rule = get('a').and('b');
+    
+    test.equal(rule.getDescription(), 'a');
 
     var result = rule.process('ab');
     test.ok(result);
@@ -51,6 +55,8 @@ exports['parse two characters'] = function (test) {
 
 exports['parse two characters as arguments'] = function (test) {
     var rule = get('a', 'b');
+    
+    test.equal(rule.getDescription(), 'a');
 
     var result = rule.process('ab');
     test.ok(result);
@@ -64,6 +70,8 @@ exports['parse two characters as arguments'] = function (test) {
 
 exports['parse two characters as alternatives'] = function (test) {
     var rule = get('a').or('b');
+    
+    test.equal(rule.getDescription(), 'a');
 
     var result = rule.process('a');
     test.ok(result);
@@ -79,6 +87,8 @@ exports['parse two characters as alternatives'] = function (test) {
 
 exports['parse two characters as alternatives using array argument'] = function (test) {
     var rule = get(['a', 'b']);
+    
+    test.equal(rule.getDescription(), 'a');
 
     var result = rule.process('a');
     test.ok(result);
@@ -94,6 +104,8 @@ exports['parse two characters as alternatives using array argument'] = function 
 
 exports['parse character range'] = function (test) {
     var rule = get('a-z');
+    
+    test.equal(rule.getDescription(), 'a-z');
 
     test.ok(rule.process('a'));
     test.equal(rule.process('a'), 'a');
@@ -109,6 +121,8 @@ exports['parse character range'] = function (test) {
 exports['parse letter'] = function (test) {
     var rule = get(['a-z', 'A-Z']);
 
+    test.equal(rule.getDescription(), 'a-z');
+    
     test.ok(rule.process('a'));
     test.equal(rule.process('a'), 'a');
     test.ok(rule.process('b'));
@@ -141,6 +155,8 @@ exports['parse word'] = function (test) {
 exports['parse word with underscore and digits'] = function (test) {
     var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
 
+    test.equal(rule.getDescription(), 'a-z');
+    
     test.ok(rule.process('abc'));
     test.equal(rule.process('abc'), 'abc');
     test.ok(rule.process('Abc'));
@@ -253,6 +269,9 @@ exports['parse nothing as something'] = function (test) {
 
 exports['parse delimited string'] = function (test) {
     var rule = get('"~"').generate('String');
+    
+    test.equal(rule.getDescription(), '"~"');
+    
     var parser = simplegrammar.createParser('"foo"');
 
     var result = rule.process(parser);
