@@ -89,6 +89,10 @@ TBD
 - 0.0.9: Published. Elements with value == null
 - 0.0.10: Published. log, fail, not functions. Parser with log options
 
+## References
+
+- [Parsing: The Solved Problem That Isn't](http://tratt.net/laurie/blog/entries/parsing_the_solved_problem_that_isnt)
+
 ## License
 
 MIT
