@@ -1,10 +1,10 @@
 
-var simplegrammar = require('..');
+const simplegrammar = require('..');
 
-var get = simplegrammar.get;
+const get = simplegrammar.get;
 
 exports['parse a character'] = function (test) {
-    var rule = get('a').not();
+    const rule = get('a').not();
     
     test.equal(rule.getDescription(), 'a');
 
@@ -13,7 +13,7 @@ exports['parse a character'] = function (test) {
 }
 
 exports['parse two characters'] = function (test) {
-    var rule = get('a').and('b').not();
+    const rule = get('a').and('b').not();
     
     test.equal(rule.getDescription(), 'a');
 
