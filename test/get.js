@@ -1,7 +1,7 @@
 
-var simplegrammar = require('..');
+const simplegrammar = require('..');
 
-var get = simplegrammar.get;
+const get = simplegrammar.get;
 
 exports['get function'] = function (test) {
     test.ok(simplegrammar);
@@ -10,7 +10,7 @@ exports['get function'] = function (test) {
 }
 
 exports['parse a character'] = function (test) {
-    var rule = get('a');
+    const rule = get('a');
     
     test.equal(rule.getDescription(), 'a');
 
@@ -21,7 +21,7 @@ exports['parse a character'] = function (test) {
 
 exports['parse a character with log function'] = function (test) {
     var result;
-    var rule = get('a').log(function (data, rule) { result = data; test.ok(data); test.ok(rule); });
+    const rule = get('a').log(function (data, rule) { result = data; test.ok(data); test.ok(rule); });
 
     test.ok(rule.process('a'));
     test.equal(rule.process('a'), 'a');
@@ -32,18 +32,18 @@ exports['parse a character with log function'] = function (test) {
 
 exports['parse a character with fail function'] = function (test) {
     var failed = false;
-    var rule = get('a').fail(function (source, rule) { test.ok(source); test.equal(source, 'b'); failed = true; });
+    const rule = get('a').fail(function (source, rule) { test.ok(source); test.equal(source, 'b'); failed = true; });
 
     test.equal(rule.process('b'), null);
     test.ok(failed);
 }
 
 exports['parse two characters'] = function (test) {
-    var rule = get('a').and('b');
+    const rule = get('a').and('b');
     
     test.equal(rule.getDescription(), 'a');
 
-    var result = rule.process('ab');
+    const result = rule.process('ab');
     test.ok(result);
     test.equal(result, 'ab');
 
@@ -54,11 +54,11 @@ exports['parse two characters'] = function (test) {
 }
 
 exports['parse two characters as arguments'] = function (test) {
-    var rule = get('a', 'b');
+    const rule = get('a', 'b');
     
     test.equal(rule.getDescription(), 'a');
 
-    var result = rule.process('ab');
+    const result = rule.process('ab');
     test.ok(result);
     test.equal(result, 'ab');
 
@@ -69,7 +69,7 @@ exports['parse two characters as arguments'] = function (test) {
 }
 
 exports['parse two characters as alternatives'] = function (test) {
-    var rule = get('a').or('b');
+    const rule = get('a').or('b');
     
     test.equal(rule.getDescription(), 'a');
 
@@ -86,7 +86,7 @@ exports['parse two characters as alternatives'] = function (test) {
 }
 
 exports['parse two characters as alternatives using array argument'] = function (test) {
-    var rule = get(['a', 'b']);
+    const rule = get(['a', 'b']);
     
     test.equal(rule.getDescription(), 'a');
 
@@ -103,7 +103,7 @@ exports['parse two characters as alternatives using array argument'] = function 
 }
 
 exports['parse character range'] = function (test) {
-    var rule = get('a-z');
+    const rule = get('a-z');
     
     test.equal(rule.getDescription(), 'a-z');
 
@@ -119,7 +119,7 @@ exports['parse character range'] = function (test) {
 }
 
 exports['parse letter'] = function (test) {
-    var rule = get(['a-z', 'A-Z']);
+    const rule = get(['a-z', 'A-Z']);
 
     test.equal(rule.getDescription(), 'a-z');
     
@@ -141,7 +141,7 @@ exports['parse letter'] = function (test) {
 }
 
 exports['parse word'] = function (test) {
-    var rule = get(['a-z', 'A-Z']).oneOrMore();
+    const rule = get(['a-z', 'A-Z']).oneOrMore();
 
     test.ok(rule.process('abc'));
     test.equal(rule.process('abc'), 'abc');
@@ -153,7 +153,7 @@ exports['parse word'] = function (test) {
 }
 
 exports['parse word with underscore and digits'] = function (test) {
-    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
+    const rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore());
 
     test.equal(rule.getDescription(), 'a-z');
     
@@ -172,7 +172,7 @@ exports['parse word with underscore and digits'] = function (test) {
 }
 
 exports['parse word with underscore and digits and optional ending bang'] = function (test) {
-    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore(), get('!').zeroOrOne());
+    const rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore(), get('!').zeroOrOne());
 
     test.ok(rule.process('abc'));
     test.equal(rule.process('abc'), 'abc');
@@ -204,9 +204,9 @@ exports['parse word with underscore and digits and optional ending bang'] = func
 };
 
 exports['parse word as object'] = function (test) {
-    var rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
+    const rule = get(['a-z', 'A-Z', '_'], get(['a-z', 'A-Z', '_', '0-9']).zeroOrMore()).generate('Word');
 
-    var result = rule.process('abc');
+    const result = rule.process('abc');
     test.ok(result);
     test.equal(typeof result, 'object');
     test.equal(result.type, 'Word');
@@ -214,53 +214,53 @@ exports['parse word as object'] = function (test) {
 }
 
 exports['parse string word'] = function (test) {
-    var rule = get("for");
+    const rule = get("for");
 
-    var result = rule.process('for');
+    const result = rule.process('for');
     test.ok(result);
     test.equal(result, 'for');
 }
 
 exports['parse sign word'] = function (test) {
-    var rule = get("==");
+    const rule = get("==");
 
-    var result = rule.process('==');
+    const result = rule.process('==');
     test.ok(result);
     test.equal(result, '==');
 }
 
 exports['reject parse sign word'] = function (test) {
-    var rule = get("==");
-    var parser = simplegrammar.createParser('for');
+    const rule = get("==");
+    const parser = simplegrammar.createParser('for');
 
-    var result = rule.process(parser);
+    const result = rule.process(parser);
     test.equal(result, null);
     test.equal(parser.next(), 'f');
 }
 
 exports['parse partial word'] = function (test) {
-    var rule = get("for");
-    var parser = simplegrammar.createParser("fot");
+    const rule = get("for");
+    const parser = simplegrammar.createParser("fot");
 
-    var result = rule.process(parser);
+    const result = rule.process(parser);
     test.equal(result, null);
     test.equal(parser.next(), "f");
 }
 
 exports['parse nothing'] = function (test) {
-    var rule = get("");
-    var parser = simplegrammar.createParser("for");
+    const rule = get("");
+    const parser = simplegrammar.createParser("for");
 
-    var result = rule.process(parser);
+    const result = rule.process(parser);
     test.equal(result, '');
     test.equal(parser.next(), "f");
 }
 
 exports['parse nothing as something'] = function (test) {
-    var rule = get("").generate('Something');
-    var parser = simplegrammar.createParser("for");
+    const rule = get("").generate('Something');
+    const parser = simplegrammar.createParser("for");
 
-    var result = rule.process(parser);
+    const result = rule.process(parser);
     test.ok(result);
     test.equal(result.type, 'Something');
     test.equal(result.value, '');
@@ -268,13 +268,13 @@ exports['parse nothing as something'] = function (test) {
 }
 
 exports['parse delimited string'] = function (test) {
-    var rule = get('"~"').generate('String');
+    const rule = get('"~"').generate('String');
     
     test.equal(rule.getDescription(), '"~"');
     
-    var parser = simplegrammar.createParser('"foo"');
+    const parser = simplegrammar.createParser('"foo"');
 
-    var result = rule.process(parser);
+    const result = rule.process(parser);
     test.ok(result);
     test.equal(result.type, 'String');
     test.equal(result.value, 'foo');
@@ -282,11 +282,11 @@ exports['parse delimited string'] = function (test) {
 }
 
 exports['parse two words skipping spaces'] = function (test) {
-    var rule1 = get([' ','\t','\r','\n']).oneOrMore().skip();
-    var rule2 = get('if', 'then').generate('Expression');
-    var parser = simplegrammar.createParser('if then', [rule1, rule2]);
+    const rule1 = get([' ','\t','\r','\n']).oneOrMore().skip();
+    const rule2 = get('if', 'then').generate('Expression');
+    const parser = simplegrammar.createParser('if then', [rule1, rule2]);
     
-    var result = parser.parse('Expression');
+    const result = parser.parse('Expression');
     
     test.ok(result);
     test.equal(result.type, 'Expression');
